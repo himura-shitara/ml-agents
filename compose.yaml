@@ -1,0 +1,16 @@
+x-ml-agents-base: &ml-agents-base
+  build: .
+  volumes:
+    - ./unity-volume:/unity-volume
+  working_dir: /unity-volume
+services:
+  mlagents-learn:
+    <<: *ml-agents-base
+    ports:
+      - "5004:5004"
+    command: mlagents-learn /unity-volume/trainer_config.yaml --train --run-id=test
+  tensorboard:
+    <<: *ml-agents-base
+    ports:
+      - "6006:6006"
+    command: tensorboard --logdir /unity-volume/results --host=0.0.0.0 --port 6006
